@@ -1,0 +1,23 @@
+  #端口号
+server:
+  port: 8080
+  #项目路径
+  servlet:
+    context-path: /reggie
+    #配置环境
+spring:
+  datasource:
+    username: root
+    password: 1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql:///reggie?useSSL=false
+    type: com.alibaba.druid.pool.DruidDataSource
+
+    #mp日志
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+    #mp驼峰/实体别名
+    map-underscore-to-camel-case: true
+  type-aliases-package: com.goj.pojo
