@@ -1,4 +1,4 @@
-package com.goj.config;
+package com.goj.reggie.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
