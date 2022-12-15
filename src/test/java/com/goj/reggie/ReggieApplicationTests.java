@@ -18,13 +18,7 @@ class ReggieApplicationTests {
     @Autowired
     EmployeeMapper em;
 
-    @Test
-    void contextLoads() {
-        Employee employee=new Employee();
-        employee.setUsername("admin");
-        Employee login = employeeService.login(employee);
-        System.out.println(login);
-    }
+
 
     @Test
     void test1(){

@@ -4,6 +4,7 @@ server:
   #项目路径
   servlet:
     context-path: /
+
     #配置环境
 spring:
   datasource:
@@ -20,3 +21,6 @@ mybatis-plus:
     #mp驼峰/实体别名
     map-underscore-to-camel-case: true
   type-aliases-package: com.goj.pojo
+
+reggie:
+  path: D:\img\

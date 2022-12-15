@@ -1,49 +1,53 @@
 package com.goj.reggie.entity;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+菜品口味
+ */
 @Data
-public class Employee implements Serializable {
+public class DishFlavor implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     private Long id;
 
-    private String username;
 
+    //菜品id
+    private Long dishId;
+
+
+    //口味名称
     private String name;
 
-    private String password;
 
-    private String phone;
+    //口味数据list
+    private String value;
 
-    private String sex;
 
-    private String idNumber;
-
-    private Integer status;
-
-    //创建时间
     @TableField(fill = FieldFill.INSERT)
     private LocalDateTime createTime;
 
 
-    //更新时间
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
 
-    //创建人
     @TableField(fill = FieldFill.INSERT)
     private Long createUser;
 
 
-    //修改人
     @TableField(fill = FieldFill.INSERT_UPDATE)
     private Long updateUser;
+
+
+    //是否删除
+    private Integer isDeleted;
 
 }

@@ -1,5 +1,6 @@
-package com.goj.reggie.common;
+package com.goj.reggie.common.exception;
 
+import com.goj.reggie.common.R;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,4 +31,5 @@ public class  GlobalExceptionHandler {
         }
         return R.error("未知错误");
     }
+
 }

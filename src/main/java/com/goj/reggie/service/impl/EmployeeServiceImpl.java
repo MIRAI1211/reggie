@@ -3,16 +3,14 @@ package com.goj.reggie.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.goj.reggie.mapper.EmployeeMapper;
 import com.goj.reggie.entity.Employee;
+import com.goj.reggie.mapper.EmployeeMapper;
 import com.goj.reggie.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
-public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper,Employee> implements EmployeeService{
+public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService{
 
     @Autowired
     private EmployeeMapper eMapper;
@@ -34,9 +32,4 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper,Employee> im
         return eMapper.selectPage(page, lqw);
     }
 
-    @Override
-    public boolean offAndOn(Employee employee) {
-        int count = eMapper.updateById(employee);
-        return count>0;
-    }
 }
