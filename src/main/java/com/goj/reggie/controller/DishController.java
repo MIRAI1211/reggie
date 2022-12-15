@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @Slf4j
 @RestController
@@ -30,10 +32,11 @@ public class DishController {
     @GetMapping("/page")
     private R<Page> getPage(int page, int pageSize, String name){
         LambdaQueryWrapper<Dish> lqwDish=new LambdaQueryWrapper<>();
-        LambdaQueryWrapper<DishDto> lqwDto=new LambdaQueryWrapper<>();
         lqwDish.like(name!=null,Dish::getName,name);
-        Page page1=new Page<>(page,pageSize);
-        Page page2 = dishService.page(page1, lqwDish);
-        return R.success(page2);
+        Page pageDish=new Page<>(page,pageSize);
+        dishService.page(pageDish, lqwDish);
+        List<Dish> records = pageDish.getRecords();
+        List<DishDto> dtos=new ArrayList<>();
+        return R.success(pageDish);
     }
 }

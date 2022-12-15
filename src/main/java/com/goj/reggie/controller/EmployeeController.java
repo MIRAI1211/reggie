@@ -61,8 +61,8 @@ public class EmployeeController {
         Page pageObject = new Page(page, pageSize);
         LambdaQueryWrapper<Employee> lqw = new LambdaQueryWrapper<>();
         lqw.like(name != null, Employee::getName, name);
-        Page page1 = employeeService.selectPage(pageObject, lqw);
-        return R.success(page1);
+        employeeService.selectPage(pageObject, lqw);
+        return R.success(pageObject);
     }
 
 
