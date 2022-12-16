@@ -2,7 +2,7 @@ package com.goj.reggie.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.goj.reggie.entity.Dish;
-import com.goj.reggie.entity.DishDto;
+import com.goj.reggie.dto.DishDto;
 import com.goj.reggie.entity.DishFlavor;
 import com.goj.reggie.mapper.DishMapper;
 import com.goj.reggie.service.DishFlavorService;
@@ -28,6 +28,15 @@ private DishFlavorService dishFlavorService;
         for (DishFlavor flavor : flavors) {
             flavor.setDishId(dishId);
             dishFlavorService.save(flavor);
+        }
+    }
+
+    @Override
+    public void updateDish(DishDto dishDto) {
+        this.updateById(dishDto);
+        List<DishFlavor> flavors=dishDto.getFlavors();
+        for (DishFlavor flavor : flavors) {
+            dishFlavorService.updateById(flavor);
         }
     }
 }

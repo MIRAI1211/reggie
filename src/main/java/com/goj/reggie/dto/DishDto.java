@@ -1,5 +1,7 @@
-package com.goj.reggie.entity;
+package com.goj.reggie.dto;
 
+import com.goj.reggie.entity.Dish;
+import com.goj.reggie.entity.DishFlavor;
 import lombok.Data;
 
 import java.util.ArrayList;
