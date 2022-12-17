@@ -36,6 +36,8 @@ private DishFlavorService dishFlavorService;
         this.updateById(dishDto);
         List<DishFlavor> flavors=dishDto.getFlavors();
         for (DishFlavor flavor : flavors) {
+            dishFlavorService.removeById(flavor);
+            flavor.setDishId(dishDto.getId());
             dishFlavorService.updateById(flavor);
         }
     }
