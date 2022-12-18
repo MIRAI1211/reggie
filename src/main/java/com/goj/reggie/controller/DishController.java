@@ -7,13 +7,16 @@ import com.goj.reggie.common.R;
 import com.goj.reggie.entity.Category;
 import com.goj.reggie.entity.Dish;
 import com.goj.reggie.dto.DishDto;
+import com.goj.reggie.entity.DishFlavor;
 import com.goj.reggie.service.CategoryService;
+import com.goj.reggie.service.DishFlavorService;
 import com.goj.reggie.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,6 +30,9 @@ public class DishController {
 
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private DishFlavorService dishFlavorService;
 
     @PostMapping
     private R<String> add(@RequestBody DishDto dishDto){
@@ -89,10 +95,21 @@ public class DishController {
     }
 
     @GetMapping("/list")
-    private R<List<Dish>> getList(Long categoryId){
+    private R<List<DishDto>> getList(Long categoryId,Integer status){
         LambdaQueryWrapper<Dish> lqw=new LambdaQueryWrapper<>();
         lqw.eq(Dish::getCategoryId,categoryId);
+        lqw.eq(Dish::getStatus,status);
         List<Dish> list = dishService.list(lqw);
-        return R.success(list);
+        List<DishDto> dtoList=new ArrayList<>();
+        for (Dish dish : list) {
+            DishDto dishDto=new DishDto();
+            BeanUtils.copyProperties(dish,dishDto);
+            LambdaQueryWrapper<DishFlavor> lqwFlavor=new LambdaQueryWrapper<>();
+            lqwFlavor.eq(DishFlavor::getDishId,dish.getId());
+            List<DishFlavor> dishFlavors = dishFlavorService.list(lqwFlavor);
+            dishDto.setFlavors(dishFlavors);
+            dtoList.add(dishDto);
+        }
+        return R.success(dtoList);
     }
 }
