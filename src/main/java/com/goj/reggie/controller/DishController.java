@@ -14,10 +14,12 @@ import com.goj.reggie.service.DishService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -34,9 +36,14 @@ public class DishController {
     @Autowired
     private DishFlavorService dishFlavorService;
 
+    @Autowired
+    private RedisTemplate redisTemplate;
+
     @PostMapping
     private R<String> add(@RequestBody DishDto dishDto){
         dishService.addDish(dishDto);
+        String key = "dish_" + dishDto.getCategoryId() + "_1";
+        redisTemplate.delete(key);
         return R.success("添加成功");
     }
 
@@ -95,21 +102,28 @@ public class DishController {
     }
 
     @GetMapping("/list")
-    private R<List<DishDto>> getList(Long categoryId,Integer status){
+    private R<List<DishDto>> getList(@RequestBody Dish dish){
+        List<DishDto> dishDtoList = null;
+        String key = "dish_" + dish.getCategoryId() + "_" + dish.getStatus();
+        dishDtoList = (List<DishDto>) redisTemplate.opsForValue().get(key);
+        if(dishDtoList != null){
+            return R.success(dishDtoList);
+        }
         LambdaQueryWrapper<Dish> lqw=new LambdaQueryWrapper<>();
-        lqw.eq(Dish::getCategoryId,categoryId);
-        lqw.eq(Dish::getStatus,status);
+        lqw.eq(Dish::getCategoryId,dish.getCategoryId());
+        lqw.eq(Dish::getStatus,dish.getStatus());
         List<Dish> list = dishService.list(lqw);
         List<DishDto> dtoList=new ArrayList<>();
-        for (Dish dish : list) {
+        for (Dish dish1 : list) {
             DishDto dishDto=new DishDto();
-            BeanUtils.copyProperties(dish,dishDto);
+            BeanUtils.copyProperties(dish1,dishDto);
             LambdaQueryWrapper<DishFlavor> lqwFlavor=new LambdaQueryWrapper<>();
-            lqwFlavor.eq(DishFlavor::getDishId,dish.getId());
+            lqwFlavor.eq(DishFlavor::getDishId,dish1.getId());
             List<DishFlavor> dishFlavors = dishFlavorService.list(lqwFlavor);
             dishDto.setFlavors(dishFlavors);
             dtoList.add(dishDto);
         }
+        redisTemplate.opsForValue().set(key,dtoList,60, TimeUnit.MINUTES);
         return R.success(dtoList);
     }
 }
